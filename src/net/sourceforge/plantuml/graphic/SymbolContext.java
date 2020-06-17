@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -39,22 +39,23 @@
  */
 package net.sourceforge.plantuml.graphic;
 
-import net.sourceforge.plantuml.ugraphic.UChangeBackColor;
-import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UStroke;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
+import net.sourceforge.plantuml.ugraphic.color.HColorBackground;
+import net.sourceforge.plantuml.ugraphic.color.HColorNone;
 
 public class SymbolContext {
 
-	private final HtmlColor backColor;
-	private final HtmlColor foreColor;
+	private final HColor backColor;
+	private final HColor foreColor;
 	private final UStroke stroke;
 	private final double deltaShadow;
 	private final double roundCorner;
 	private final double diagonalCorner;
 
-	private SymbolContext(HtmlColor backColor, HtmlColor foreColor, UStroke stroke, double deltaShadow,
-			double roundCorner, double diagonalCorner) {
+	private SymbolContext(HColor backColor, HColor foreColor, UStroke stroke, double deltaShadow, double roundCorner,
+			double diagonalCorner) {
 		this.backColor = backColor;
 		this.foreColor = foreColor;
 		this.stroke = stroke;
@@ -75,8 +76,12 @@ public class SymbolContext {
 	}
 
 	public UGraphic applyColors(UGraphic ug) {
-		ug = ug.apply(new UChangeColor(foreColor));
-		ug = ug.apply(new UChangeBackColor(backColor));
+		ug = ug.apply(foreColor);
+		if (backColor == null) {
+			ug = ug.apply(new HColorNone().bg());
+		} else {
+			ug = ug.apply(backColor.bg());
+		}
 		return ug;
 	}
 
@@ -85,13 +90,14 @@ public class SymbolContext {
 	}
 
 	public SymbolContext transparentBackColorToNull() {
-		if (backColor instanceof HtmlColorTransparent) {
-			return new SymbolContext(null, foreColor, stroke, deltaShadow, roundCorner, diagonalCorner);
+		if (backColor instanceof HColorBackground) {
+			return new SymbolContext(((HColorBackground) backColor).getNull(), foreColor, stroke, deltaShadow,
+					roundCorner, diagonalCorner);
 		}
 		return this;
 	}
 
-	public SymbolContext(HtmlColor backColor, HtmlColor foreColor) {
+	public SymbolContext(HColor backColor, HColor foreColor) {
 		this(backColor, foreColor, new UStroke(), 0, 0, 0);
 	}
 
@@ -107,11 +113,11 @@ public class SymbolContext {
 		return new SymbolContext(backColor, foreColor, newStroke, deltaShadow, roundCorner, diagonalCorner);
 	}
 
-	public SymbolContext withBackColor(HtmlColor backColor) {
+	public SymbolContext withBackColor(HColor backColor) {
 		return new SymbolContext(backColor, foreColor, stroke, deltaShadow, roundCorner, diagonalCorner);
 	}
 
-	public SymbolContext withForeColor(HtmlColor foreColor) {
+	public SymbolContext withForeColor(HColor foreColor) {
 		return new SymbolContext(backColor, foreColor, stroke, deltaShadow, roundCorner, diagonalCorner);
 	}
 
@@ -119,11 +125,11 @@ public class SymbolContext {
 		return new SymbolContext(backColor, foreColor, stroke, deltaShadow, roundCorner, diagonalCorner);
 	}
 
-	public HtmlColor getBackColor() {
+	public HColor getBackColor() {
 		return backColor;
 	}
 
-	public HtmlColor getForeColor() {
+	public HColor getForeColor() {
 		return foreColor;
 	}
 

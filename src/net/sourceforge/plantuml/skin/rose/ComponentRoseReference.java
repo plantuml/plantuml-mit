@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -47,7 +47,6 @@ import net.sourceforge.plantuml.SkinParam;
 import net.sourceforge.plantuml.cucadiagram.Display;
 import net.sourceforge.plantuml.graphic.FontConfiguration;
 import net.sourceforge.plantuml.graphic.HorizontalAlignment;
-import net.sourceforge.plantuml.graphic.HtmlColor;
 import net.sourceforge.plantuml.graphic.StringBounder;
 import net.sourceforge.plantuml.graphic.SymbolContext;
 import net.sourceforge.plantuml.graphic.TextBlock;
@@ -59,6 +58,7 @@ import net.sourceforge.plantuml.ugraphic.UPolygon;
 import net.sourceforge.plantuml.ugraphic.URectangle;
 import net.sourceforge.plantuml.ugraphic.UStroke;
 import net.sourceforge.plantuml.ugraphic.UTranslate;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
 
 public class ComponentRoseReference extends AbstractTextualComponent {
 
@@ -72,7 +72,7 @@ public class ComponentRoseReference extends AbstractTextualComponent {
 
 	public ComponentRoseReference(Style style, Style styleHeader, FontConfiguration font, SymbolContext symbolContext,
 			FontConfiguration fcHeader, Display stringsToDisplay, HorizontalAlignment position,
-			ISkinSimple spriteContainer, HtmlColor background) {
+			ISkinSimple spriteContainer, HColor background) {
 		super(style, LineBreakStrategy.NONE, stringsToDisplay.subList(1, stringsToDisplay.size()), font,
 				HorizontalAlignment.LEFT, 4, 4, 4, spriteContainer, false, null, null);
 		if (SkinParam.USE_STYLES()) {
@@ -101,7 +101,7 @@ public class ComponentRoseReference extends AbstractTextualComponent {
 				- symbolContextHeader.getDeltaShadow(), dimensionToUse.getHeight() - heightFooter);
 		rect.setDeltaShadow(symbolContextHeader.getDeltaShadow());
 		ug = symbolContextBody.apply(ug);
-		ug.apply(new UTranslate(xMargin, 0)).draw(rect);
+		ug.apply(UTranslate.dx(xMargin)).draw(rect);
 
 		final UPolygon polygon = new UPolygon();
 		polygon.addPoint(0, 0);
@@ -114,7 +114,7 @@ public class ComponentRoseReference extends AbstractTextualComponent {
 		polygon.addPoint(0, 0);
 
 		ug = symbolContextHeader.apply(ug);
-		ug.apply(new UTranslate(xMargin, 0)).draw(polygon);
+		ug.apply(UTranslate.dx(xMargin)).draw(polygon);
 
 		ug = ug.apply(new UStroke());
 

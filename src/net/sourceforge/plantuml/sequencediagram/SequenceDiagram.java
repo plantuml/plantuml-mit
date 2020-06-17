@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -67,13 +67,13 @@ import net.sourceforge.plantuml.core.ImageData;
 import net.sourceforge.plantuml.cucadiagram.Display;
 import net.sourceforge.plantuml.cucadiagram.EntityPortion;
 import net.sourceforge.plantuml.cucadiagram.Stereotype;
-import net.sourceforge.plantuml.graphic.HtmlColor;
 import net.sourceforge.plantuml.graphic.SymbolContext;
 import net.sourceforge.plantuml.sequencediagram.graphic.FileMaker;
 import net.sourceforge.plantuml.sequencediagram.graphic.SequenceDiagramFileMakerPuma2;
 import net.sourceforge.plantuml.sequencediagram.graphic.SequenceDiagramTxtMaker;
 import net.sourceforge.plantuml.sequencediagram.teoz.SequenceDiagramFileMakerTeoz;
 import net.sourceforge.plantuml.skin.rose.Rose;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
 
 public class SequenceDiagram extends UmlDiagram {
 
@@ -97,8 +97,8 @@ public class SequenceDiagram extends UmlDiagram {
 	public Participant getOrCreateParticipant(String code, Display display) {
 		Participant result = participantsget(code);
 		if (result == null) {
-			result = new Participant(ParticipantType.PARTICIPANT, code, display, hiddenPortions, 0, getSkinParam()
-					.getCurrentStyleBuilder());
+			result = new Participant(ParticipantType.PARTICIPANT, code, display, hiddenPortions, 0,
+					getSkinParam().getCurrentStyleBuilder());
 			addWithOrder(result);
 			participantEnglobers2.put(result, participantEnglober);
 		}
@@ -128,8 +128,8 @@ public class SequenceDiagram extends UmlDiagram {
 			// display = Arrays.asList(code);
 			display = Display.getWithNewlines(code);
 		}
-		final Participant result = new Participant(type, code, display, hiddenPortions, order, getSkinParam()
-				.getCurrentStyleBuilder());
+		final Participant result = new Participant(type, code, display, hiddenPortions, order,
+				getSkinParam().getCurrentStyleBuilder());
 		addWithOrder(result);
 		participantEnglobers2.put(result, participantEnglober);
 		return result;
@@ -231,7 +231,7 @@ public class SequenceDiagram extends UmlDiagram {
 		return Collections.unmodifiableList(events);
 	}
 
-	private FileMaker getSequenceDiagramPngMaker(FileFormatOption fileFormatOption) {
+	private FileMaker getSequenceDiagramPngMaker(int index, FileFormatOption fileFormatOption) {
 
 		final FileFormat fileFormat = fileFormatOption.getFileFormat();
 
@@ -240,7 +240,7 @@ public class SequenceDiagram extends UmlDiagram {
 		}
 
 		if (modeTeoz()) {
-			return new SequenceDiagramFileMakerTeoz(this, skin2, fileFormatOption);
+			return new SequenceDiagramFileMakerTeoz(this, skin2, fileFormatOption, index);
 		}
 
 		return new SequenceDiagramFileMakerPuma2(this, skin2, fileFormatOption);
@@ -253,14 +253,14 @@ public class SequenceDiagram extends UmlDiagram {
 	@Override
 	protected ImageData exportDiagramInternal(OutputStream os, int index, FileFormatOption fileFormat)
 			throws IOException {
-		final FileMaker sequenceDiagramPngMaker = getSequenceDiagramPngMaker(fileFormat);
+		final FileMaker sequenceDiagramPngMaker = getSequenceDiagramPngMaker(index, fileFormat);
 		return sequenceDiagramPngMaker.createOne(os, index, fileFormat.isWithMetadata());
 	}
 
 	// support for CommandReturn
-	private final Stack<Message> activationState = new Stack<Message>();
+	private final Stack<AbstractMessage> activationState = new Stack<AbstractMessage>();
 
-	public Message getActivatingMessage() {
+	public AbstractMessage getActivatingMessage() {
 		if (activationState.empty()) {
 			return null;
 		}
@@ -269,11 +269,11 @@ public class SequenceDiagram extends UmlDiagram {
 
 	private LifeEvent pendingCreate = null;
 
-	public String activate(Participant p, LifeEventType lifeEventType, HtmlColor backcolor) {
+	public String activate(Participant p, LifeEventType lifeEventType, HColor backcolor) {
 		return activate(p, lifeEventType, backcolor, null);
 	}
 
-	public String activate(Participant p, LifeEventType lifeEventType, HtmlColor backcolor, HtmlColor linecolor) {
+	public String activate(Participant p, LifeEventType lifeEventType, HColor backcolor, HColor linecolor) {
 		if (lastDelay != null) {
 			return "You cannot Activate/Deactivate just after a ...";
 		}
@@ -293,8 +293,8 @@ public class SequenceDiagram extends UmlDiagram {
 			}
 			return null;
 		}
-		if (lifeEventType == LifeEventType.ACTIVATE && lastEventWithDeactivate instanceof Message) {
-			activationState.push((Message) lastEventWithDeactivate);
+		if (lifeEventType == LifeEventType.ACTIVATE && lastEventWithDeactivate instanceof AbstractMessage) {
+			activationState.push((AbstractMessage) lastEventWithDeactivate);
 		} else if (lifeEventType == LifeEventType.DEACTIVATE && activationState.empty() == false) {
 			activationState.pop();
 		}
@@ -310,8 +310,8 @@ public class SequenceDiagram extends UmlDiagram {
 
 	private final List<GroupingStart> openGroupings = new ArrayList<GroupingStart>();
 
-	public boolean grouping(String title, String comment, GroupingType type, HtmlColor backColorGeneral,
-			HtmlColor backColorElement, boolean parallel) {
+	public boolean grouping(String title, String comment, GroupingType type, HColor backColorGeneral,
+			HColor backColorElement, boolean parallel) {
 		if (type != GroupingType.START && openGroupings.size() == 0) {
 			return false;
 		}
@@ -321,9 +321,11 @@ public class SequenceDiagram extends UmlDiagram {
 
 		final GroupingStart top = openGroupings.size() > 0 ? openGroupings.get(0) : null;
 
-		final Grouping g = type == GroupingType.START ? new GroupingStart(title, comment, backColorGeneral,
-				backColorElement, top, getSkinParam().getCurrentStyleBuilder()) : new GroupingLeaf(title, comment,
-				type, backColorGeneral, backColorElement, top, getSkinParam().getCurrentStyleBuilder());
+		final Grouping g = type == GroupingType.START
+				? new GroupingStart(title, comment, backColorGeneral, backColorElement, top,
+						getSkinParam().getCurrentStyleBuilder())
+				: new GroupingLeaf(title, comment, type, backColorGeneral, backColorElement, top,
+						getSkinParam().getCurrentStyleBuilder());
 		events.add(g);
 
 		if (type == GroupingType.START) {
@@ -361,7 +363,8 @@ public class SequenceDiagram extends UmlDiagram {
 	// autoNumber.resume(decimalFormat);
 	// }
 	//
-	// public final void autonumberResume(int increment, DecimalFormat decimalFormat) {
+	// public final void autonumberResume(int increment, DecimalFormat
+	// decimalFormat) {
 	// autoNumber.resume(increment, decimalFormat);
 	// }
 
@@ -397,7 +400,7 @@ public class SequenceDiagram extends UmlDiagram {
 
 	private ParticipantEnglober participantEnglober;
 
-	public void boxStart(Display comment, HtmlColor color, Stereotype stereotype) {
+	public void boxStart(Display comment, HColor color, Stereotype stereotype) {
 		if (participantEnglober != null) {
 			throw new IllegalStateException();
 		}
@@ -418,7 +421,7 @@ public class SequenceDiagram extends UmlDiagram {
 	@Override
 	public int getNbImages() {
 		try {
-			return getSequenceDiagramPngMaker(new FileFormatOption(FileFormat.PNG)).getNbPages();
+			return getSequenceDiagramPngMaker(1, new FileFormatOption(FileFormat.PNG)).getNbPages();
 		} catch (Throwable t) {
 			t.printStackTrace();
 			return 1;
@@ -523,7 +526,7 @@ public class SequenceDiagram extends UmlDiagram {
 		return super.checkFinalError();
 	}
 
-	private final Set<EntityPortion> hiddenPortions = EnumSet.<EntityPortion> noneOf(EntityPortion.class);
+	private final Set<EntityPortion> hiddenPortions = EnumSet.<EntityPortion>noneOf(EntityPortion.class);
 
 	public void hideOrShow(Set<EntityPortion> portions, boolean show) {
 		if (show) {

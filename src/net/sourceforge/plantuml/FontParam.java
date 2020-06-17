@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -98,11 +98,11 @@ public enum FontParam {
 	SEQUENCE_GROUP_HEADER(13, Font.BOLD), //
 	PARTICIPANT(14, Font.PLAIN), //
 	PARTICIPANT_STEREOTYPE(14, Font.ITALIC), //
-	SEQUENCE_TITLE(14, Font.BOLD), //
 	STATE(14, Font.PLAIN), //
 	STATE_ATTRIBUTE(12, Font.PLAIN), //
 	LEGEND(14, Font.PLAIN), //
 	TITLE(18, Font.PLAIN), //
+	// SEQUENCE_TITLE(14, Font.BOLD), //
 	CAPTION(14, Font.PLAIN), //
 	SWIMLANE_TITLE(18, Font.PLAIN), //
 	FOOTER(10, Font.PLAIN, "#888888", FontParamConstant.FAMILY), //
@@ -185,7 +185,7 @@ public enum FontParam {
 		return new FontConfiguration(skinParam, this, null);
 	}
 
-	public StyleSignature getStyleDefinition() {
+	public StyleSignature getStyleDefinition(SName diagramType) {
 		if (this == FOOTER) {
 			return StyleSignature.of(SName.root, SName.footer);
 		}
@@ -195,8 +195,15 @@ public enum FontParam {
 		if (this == TITLE) {
 			return StyleSignature.of(SName.root, SName.title);
 		}
-		System.err.println("Warning " + this);
-		return null;
+		if (this == CLASS_ATTRIBUTE) {
+			return StyleSignature.of(SName.root, SName.element, SName.classDiagram, SName.class_);
+		}
+		if (this == RECTANGLE || this == NODE) {
+			return StyleSignature.of(SName.root, SName.element, SName.componentDiagram, SName.component);
+		}
+		return StyleSignature.of(SName.root, SName.element, diagramType, SName.component);
+//		System.err.println("Warning " + this);
+//		throw new UnsupportedOperationException();
 	}
 
 }

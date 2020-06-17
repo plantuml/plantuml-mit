@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -50,7 +50,6 @@ import net.sourceforge.plantuml.Url;
 import net.sourceforge.plantuml.cucadiagram.Display;
 import net.sourceforge.plantuml.cucadiagram.EntityPortion;
 import net.sourceforge.plantuml.cucadiagram.Stereotype;
-import net.sourceforge.plantuml.graphic.HtmlColor;
 import net.sourceforge.plantuml.graphic.SymbolContext;
 import net.sourceforge.plantuml.graphic.color.ColorType;
 import net.sourceforge.plantuml.graphic.color.Colors;
@@ -58,6 +57,7 @@ import net.sourceforge.plantuml.style.Style;
 import net.sourceforge.plantuml.style.StyleBuilder;
 import net.sourceforge.plantuml.style.StyleSignature;
 import net.sourceforge.plantuml.style.WithStyle;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
 
 public class Participant implements SpecificBackcolorable, WithStyle {
 
@@ -176,7 +176,7 @@ public class Participant implements SpecificBackcolorable, WithStyle {
 		return colors;
 	}
 
-	public void setSpecificColorTOBEREMOVED(ColorType type, HtmlColor color) {
+	public void setSpecificColorTOBEREMOVED(ColorType type, HColor color) {
 		if (color != null) {
 			this.colors = colors.add(type, color);
 		}
@@ -207,14 +207,14 @@ public class Participant implements SpecificBackcolorable, WithStyle {
 	}
 
 	public SkinParamBackcolored getSkinParamBackcolored(ISkinParam skinParam) {
-		HtmlColor specificBackColor = getColors(skinParam).getColor(ColorType.BACK);
+		HColor specificBackColor = getColors(skinParam).getColor(ColorType.BACK);
 		final boolean clickable = getUrl() != null;
-		final HtmlColor stereoBackColor = skinParam.getHtmlColor(getBackgroundColorParam(), getStereotype(), clickable);
+		final HColor stereoBackColor = skinParam.getHtmlColor(getBackgroundColorParam(), getStereotype(), clickable);
 		if (stereoBackColor != null && specificBackColor == null) {
 			specificBackColor = stereoBackColor;
 		}
 		final SkinParamBackcolored result = new SkinParamBackcolored(skinParam, specificBackColor, clickable);
-		final HtmlColor stereoBorderColor = skinParam.getHtmlColor(ColorParam.participantBorder, getStereotype(),
+		final HColor stereoBorderColor = skinParam.getHtmlColor(ColorParam.participantBorder, getStereotype(),
 				clickable);
 		if (stereoBorderColor != null) {
 			result.forceColor(ColorParam.participantBorder, stereoBorderColor);

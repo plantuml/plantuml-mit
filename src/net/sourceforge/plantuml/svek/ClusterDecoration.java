@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -40,13 +40,13 @@
 package net.sourceforge.plantuml.svek;
 
 import net.sourceforge.plantuml.graphic.HorizontalAlignment;
-import net.sourceforge.plantuml.graphic.HtmlColor;
 import net.sourceforge.plantuml.graphic.SymbolContext;
 import net.sourceforge.plantuml.graphic.TextBlock;
 import net.sourceforge.plantuml.graphic.USymbol;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UStroke;
 import net.sourceforge.plantuml.ugraphic.UTranslate;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
 
 public class ClusterDecoration {
 
@@ -86,7 +86,7 @@ public class ClusterDecoration {
 	public final static int marginTitleY1 = 3;
 	public final static int marginTitleY2 = 3;
 
-	public void drawU(UGraphic ug, HtmlColor backColor, HtmlColor borderColor, double shadowing, double roundCorner,
+	public void drawU(UGraphic ug, HColor backColor, HColor borderColor, double shadowing, double roundCorner,
 			HorizontalAlignment titleAlignment, HorizontalAlignment stereoAlignment) {
 		final SymbolContext biColor = new SymbolContext(backColor, borderColor);
 		if (symbol == null) {

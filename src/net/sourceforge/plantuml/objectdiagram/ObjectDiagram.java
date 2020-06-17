@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -43,6 +43,7 @@ import net.sourceforge.plantuml.ISkinSimple;
 import net.sourceforge.plantuml.UmlDiagramType;
 import net.sourceforge.plantuml.cucadiagram.Code;
 import net.sourceforge.plantuml.cucadiagram.ILeaf;
+import net.sourceforge.plantuml.cucadiagram.Ident;
 import net.sourceforge.plantuml.cucadiagram.LeafType;
 import net.sourceforge.plantuml.graphic.USymbol;
 
@@ -53,11 +54,12 @@ public class ObjectDiagram extends AbstractClassOrObjectDiagram {
 	}
 
 	@Override
-	public ILeaf getOrCreateLeaf(Code code, LeafType type, USymbol symbol) {
+	public ILeaf getOrCreateLeaf(Ident ident, Code code, LeafType type, USymbol symbol) {
 		if (type == null) {
 			type = LeafType.OBJECT;
 		}
-		return getOrCreateLeafDefault(code, type, symbol);
+		// final Ident idNewLong = buildLeafIdent(id);
+		return getOrCreateLeafDefault(ident, code, type, symbol);
 	}
 
 	@Override

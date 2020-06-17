@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -43,7 +43,6 @@ import java.awt.geom.Dimension2D;
 
 import net.sourceforge.plantuml.ColorParam;
 import net.sourceforge.plantuml.ISkinParam;
-import net.sourceforge.plantuml.graphic.HtmlColor;
 import net.sourceforge.plantuml.graphic.StringBounder;
 import net.sourceforge.plantuml.real.Real;
 import net.sourceforge.plantuml.sequencediagram.AbstractMessage;
@@ -54,11 +53,11 @@ import net.sourceforge.plantuml.skin.Component;
 import net.sourceforge.plantuml.skin.ComponentType;
 import net.sourceforge.plantuml.skin.Context2D;
 import net.sourceforge.plantuml.skin.rose.Rose;
-import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.ULine;
 import net.sourceforge.plantuml.ugraphic.UStroke;
 import net.sourceforge.plantuml.ugraphic.UTranslate;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
 
 public class CommunicationTileNoteBottom extends AbstractTile implements TileWithUpdateStairs, TileWithCallbackY {
 
@@ -123,12 +122,12 @@ public class CommunicationTileNoteBottom extends AbstractTile implements TileWit
 	private final double spacey = 10;
 
 	private void drawLine(UGraphic ug, double x1, double y1, double x2, double y2) {
-		final HtmlColor color = new Rose().getHtmlColor(skinParam, ColorParam.arrow);
+		final HColor color = new Rose().getHtmlColor(skinParam, ColorParam.arrow);
 
 		final double dx = x2 - x1;
 		final double dy = y2 - y1;
 
-		ug.apply(new UTranslate(x1, y1)).apply(new UChangeColor(color)).apply(new UStroke(2, 2, 1))
+		ug.apply(new UTranslate(x1, y1)).apply(color).apply(new UStroke(2, 2, 1))
 				.draw(new ULine(dx, dy));
 
 	}

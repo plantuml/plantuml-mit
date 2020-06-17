@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -70,6 +70,16 @@ public class MessageExo extends AbstractMessage {
 			return NotePosition.LEFT;
 		}
 		throw new IllegalStateException();
+	}
+
+	@Override
+	public Participant getParticipant1() {
+		return participant;
+	}
+
+	@Override
+	public Participant getParticipant2() {
+		return participant;
 	}
 
 	public Participant getParticipant() {

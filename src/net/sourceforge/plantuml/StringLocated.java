@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -40,12 +40,17 @@
 package net.sourceforge.plantuml;
 
 import net.sourceforge.plantuml.command.regex.FoxSignature;
+import net.sourceforge.plantuml.tim.TLineType;
 
 final public class StringLocated {
 
 	private final String s;
 	private final LineLocation location;
 	private final String preprocessorError;
+
+	private StringLocated trimmed;
+	private long fox = -1;
+	private TLineType type;
 
 	public StringLocated(String s, LineLocation location) {
 		this(s, location, null);
@@ -58,6 +63,13 @@ final public class StringLocated {
 
 	public StringLocated append(String endOfLine) {
 		return new StringLocated(s + endOfLine, location, preprocessorError);
+	}
+
+	public StringLocated mergeEndBackslash(StringLocated next) {
+		if (StringUtils.endsWithBackslash(s) == false) {
+			throw new IllegalArgumentException();
+		}
+		return new StringLocated(s.substring(0, s.length() - 1) + next.s, location, preprocessorError);
 	}
 
 	public StringLocated(String s, LineLocation location, String preprocessorError) {
@@ -73,12 +85,14 @@ final public class StringLocated {
 		return new StringLocated(s, location, preprocessorError);
 	}
 
-	public StringLocated sub(int start, int end) {
+	public StringLocated substring(int start, int end) {
 		return new StringLocated(this.getString().substring(start, end), this.getLocation(),
 				this.getPreprocessorError());
 	}
 
-	private StringLocated trimmed;
+	public StringLocated substring(int start) {
+		return new StringLocated(this.getString().substring(start), this.getLocation(), this.getPreprocessorError());
+	}
 
 	public StringLocated getTrimmed() {
 		if (trimmed == null) {
@@ -88,6 +102,10 @@ final public class StringLocated {
 		}
 		return trimmed;
 	}
+
+//	public StringLocated getTrimmedRight() {
+//		return new StringLocated(StringUtils.trinEnding(this.getString()), location, preprocessorError);
+//	}
 
 	public StringLocated removeInnerComment() {
 		final String string = s.toString();
@@ -131,13 +149,18 @@ final public class StringLocated {
 		return preprocessorError;
 	}
 
-	private long fox = -1;
-
 	public long getFoxSignature() {
 		if (fox == -1) {
 			fox = FoxSignature.getFoxSignature(getString());
 		}
 		return fox;
+	}
+
+	public TLineType getType() {
+		if (type == null) {
+			type = TLineType.getFromLineInternal(s);
+		}
+		return type;
 	}
 
 }

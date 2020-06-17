@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -46,7 +46,6 @@ import net.sourceforge.plantuml.UmlDiagram;
 import net.sourceforge.plantuml.command.regex.Matcher2;
 import net.sourceforge.plantuml.cucadiagram.Display;
 import net.sourceforge.plantuml.graphic.HorizontalAlignment;
-import net.sourceforge.plantuml.style.PName;
 
 public class CommandMultilinesHeader extends CommandMultilines<TitledDiagram> {
 
@@ -60,8 +59,8 @@ public class CommandMultilinesHeader extends CommandMultilines<TitledDiagram> {
 	}
 
 	public CommandExecutionResult execute(final TitledDiagram diagram, BlocLines lines) {
-		lines = lines.trim(false);
-		final Matcher2 m = getStartingPattern().matcher(lines.getFirst499().getTrimmed().getString());
+		lines = lines.trim();
+		final Matcher2 m = getStartingPattern().matcher(lines.getFirst().getTrimmed().getString());
 		if (m.find() == false) {
 			throw new IllegalStateException();
 		}
@@ -71,7 +70,7 @@ public class CommandMultilinesHeader extends CommandMultilines<TitledDiagram> {
 		if (strings.size() > 0) {
 			HorizontalAlignment ha = HorizontalAlignment.fromString(align, HorizontalAlignment.RIGHT);
 			if (SkinParam.USE_STYLES() && align == null) {
-				ha = FontParam.HEADER.getStyleDefinition()
+				ha = FontParam.HEADER.getStyleDefinition(null)
 						.getMergedStyle(((UmlDiagram) diagram).getSkinParam().getCurrentStyleBuilder())
 						.getHorizontalAlignment();
 			}

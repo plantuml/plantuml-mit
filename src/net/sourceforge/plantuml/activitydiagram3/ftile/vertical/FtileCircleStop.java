@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -49,23 +49,21 @@ import net.sourceforge.plantuml.activitydiagram3.ftile.AbstractFtile;
 import net.sourceforge.plantuml.activitydiagram3.ftile.Ftile;
 import net.sourceforge.plantuml.activitydiagram3.ftile.FtileGeometry;
 import net.sourceforge.plantuml.activitydiagram3.ftile.Swimlane;
-import net.sourceforge.plantuml.graphic.HtmlColor;
-import net.sourceforge.plantuml.graphic.HtmlColorMiddle;
-import net.sourceforge.plantuml.graphic.HtmlColorUtils;
 import net.sourceforge.plantuml.graphic.StringBounder;
 import net.sourceforge.plantuml.style.PName;
 import net.sourceforge.plantuml.style.Style;
-import net.sourceforge.plantuml.ugraphic.UChangeBackColor;
-import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UEllipse;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UTranslate;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
+import net.sourceforge.plantuml.ugraphic.color.HColorMiddle;
+import net.sourceforge.plantuml.ugraphic.color.HColorUtils;
 
 public class FtileCircleStop extends AbstractFtile {
 
 	private static final int SIZE = 22;
 
-	private final HtmlColor backColor;
+	private final HColor backColor;
 	private final Swimlane swimlane;
 	private double shadowing;
 
@@ -74,7 +72,7 @@ public class FtileCircleStop extends AbstractFtile {
 		return Collections.emptyList();
 	}
 
-	public FtileCircleStop(ISkinParam skinParam, HtmlColor backColor, Swimlane swimlane, Style style) {
+	public FtileCircleStop(ISkinParam skinParam, HColor backColor, Swimlane swimlane, Style style) {
 		super(skinParam);
 		this.backColor = backColor;
 		this.swimlane = swimlane;
@@ -105,15 +103,15 @@ public class FtileCircleStop extends AbstractFtile {
 	public void drawU(UGraphic ug) {
 		final UEllipse circle = new UEllipse(SIZE, SIZE);
 		circle.setDeltaShadow(shadowing);
-		ug.apply(new UChangeColor(backColor)).apply(new UChangeBackColor(HtmlColorUtils.WHITE)).draw(circle);
+		ug.apply(backColor).apply(HColorUtils.WHITE.bg()).draw(circle);
 
 		final double delta = 5;
 		final UEllipse circleSmall = new UEllipse(SIZE - delta * 2, SIZE - delta * 2);
 		// if (skinParam().shadowing(null)) {
 		// circleSmall.setDeltaShadow(3);
 		// }
-		ug.apply(new UChangeColor(new HtmlColorMiddle(backColor, HtmlColorUtils.WHITE)))
-				.apply(new UChangeBackColor(backColor)).apply(new UTranslate(delta, delta)).draw(circleSmall);
+		ug.apply(new HColorMiddle(backColor, HColorUtils.WHITE))
+				.apply(backColor.bg()).apply(new UTranslate(delta, delta)).draw(circleSmall);
 	}
 
 	@Override

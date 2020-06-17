@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -41,22 +41,22 @@ package net.sourceforge.plantuml.sprite;
 
 import java.awt.Color;
 
-import net.sourceforge.plantuml.graphic.HtmlColor;
-import net.sourceforge.plantuml.graphic.HtmlColorSimple;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
+import net.sourceforge.plantuml.ugraphic.color.HColorSimple;
 
 public class ColorPalette4096 {
 
 	private static final String colorValue = "!#$%&*+-:;<=>?@^_~GHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 	public String getStringFor(Color dest) {
-		return getStringFor(new HtmlColorSimple(dest, false));
+		return getStringFor(new HColorSimple(dest, false));
 	}
 
-	public String getStringFor(HtmlColor dest) {
+	public String getStringFor(HColor dest) {
 		int result = 0;
 		double resultDist = Double.MAX_VALUE;
 		for (int i = 0; i < 4096; i++) {
-			final double dist = ((HtmlColorSimple) dest).distance(getHtmlColorSimpleFor(i));
+			final double dist = ((HColorSimple) dest).distance(getHtmlColorSimpleFor(i));
 			if (dist < resultDist) {
 				result = i;
 				resultDist = dist;
@@ -72,12 +72,12 @@ public class ColorPalette4096 {
 		return "" + colorValue.charAt(v1) + colorValue.charAt(v2);
 	}
 
-	private HtmlColorSimple getHtmlColorSimpleFor(int s) {
+	private HColorSimple getHtmlColorSimpleFor(int s) {
 		final Color color = getColorFor(s);
 		if (color == null) {
 			throw new IllegalArgumentException();
 		}
-		return new HtmlColorSimple(color, false);
+		return new HColorSimple(color, false);
 	}
 
 	public Color getColorFor(String s) {

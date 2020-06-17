@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -75,7 +75,7 @@ class Fork extends WBSTextBlock {
 		final Dimension2D fullDim = calculateDimension(stringBounder);
 		final Dimension2D mainDim = main.calculateDimension(stringBounder);
 		final double dx = (fullDim.getWidth() - mainDim.getWidth()) / 2;
-		main.drawU(ug.apply(new UTranslate(dx, 0)));
+		main.drawU(ug.apply(UTranslate.dx(dx)));
 		drawLine(ug, dx + mainDim.getWidth() / 2, mainDim.getHeight(), dx + mainDim.getWidth() / 2, mainDim.getHeight()
 				+ deltay / 2);
 		double x = 0;

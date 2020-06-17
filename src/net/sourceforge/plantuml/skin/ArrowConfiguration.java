@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -39,9 +39,9 @@
  */
 package net.sourceforge.plantuml.skin;
 
-import net.sourceforge.plantuml.graphic.HtmlColor;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UStroke;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
 
 public class ArrowConfiguration {
 
@@ -53,14 +53,14 @@ public class ArrowConfiguration {
 	private final ArrowDecoration decoration1;
 	private final ArrowDecoration decoration2;
 
-	private final HtmlColor color;
+	private final HColor color;
 
 	private final boolean isSelf;
 	private final double thickness;
 	private final boolean reverseDefine;
 
 	private ArrowConfiguration(ArrowBody body, ArrowDressing dressing1, ArrowDressing dressing2,
-			ArrowDecoration decoration1, ArrowDecoration decoration2, HtmlColor color, boolean isSelf,
+			ArrowDecoration decoration1, ArrowDecoration decoration2, HColor color, boolean isSelf,
 			double thickness, boolean reverseDefine) {
 		if (body == null || dressing1 == null || dressing2 == null) {
 			throw new IllegalArgumentException();
@@ -165,7 +165,7 @@ public class ArrowConfiguration {
 				reverseDefine);
 	}
 
-	public ArrowConfiguration withColor(HtmlColor color) {
+	public ArrowConfiguration withColor(HColor color) {
 		return new ArrowConfiguration(body, dressing1, dressing2, decoration1, decoration2, color, isSelf, thickness,
 				reverseDefine);
 	}
@@ -221,7 +221,7 @@ public class ArrowConfiguration {
 		return dressing1.getPart();
 	}
 
-	public HtmlColor getColor() {
+	public HColor getColor() {
 		return color;
 	}
 

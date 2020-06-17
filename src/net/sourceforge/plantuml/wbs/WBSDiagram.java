@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -49,6 +49,7 @@ import net.sourceforge.plantuml.Direction;
 import net.sourceforge.plantuml.FileFormatOption;
 import net.sourceforge.plantuml.ISkinParam;
 import net.sourceforge.plantuml.Scale;
+import net.sourceforge.plantuml.SkinParam;
 import net.sourceforge.plantuml.UmlDiagram;
 import net.sourceforge.plantuml.UmlDiagramType;
 import net.sourceforge.plantuml.command.CommandExecutionResult;
@@ -58,15 +59,16 @@ import net.sourceforge.plantuml.command.regex.Pattern2;
 import net.sourceforge.plantuml.core.DiagramDescription;
 import net.sourceforge.plantuml.core.ImageData;
 import net.sourceforge.plantuml.cucadiagram.Display;
-import net.sourceforge.plantuml.graphic.HtmlColor;
 import net.sourceforge.plantuml.graphic.InnerStrategy;
 import net.sourceforge.plantuml.graphic.StringBounder;
 import net.sourceforge.plantuml.graphic.TextBlock;
 import net.sourceforge.plantuml.mindmap.IdeaShape;
+import net.sourceforge.plantuml.style.ClockwiseTopRightBottomLeft;
 import net.sourceforge.plantuml.svek.TextBlockBackcolored;
 import net.sourceforge.plantuml.ugraphic.ImageBuilder;
 import net.sourceforge.plantuml.ugraphic.MinMax;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
 
 public class WBSDiagram extends UmlDiagram {
 
@@ -86,9 +88,17 @@ public class WBSDiagram extends UmlDiagram {
 
 		final double dpiFactor = scale == null ? getScaleCoef(fileFormatOption) : scale.getScale(100, 100);
 		final ISkinParam skinParam = getSkinParam();
-		final ImageBuilder imageBuilder = new ImageBuilder(skinParam.getColorMapper(), dpiFactor,
-				skinParam.getBackgroundColor(), fileFormatOption.isWithMetadata() ? getMetadata() : null, "", 10, 10,
-				null, skinParam.handwritten());
+		final int margin1;
+		final int margin2;
+		if (SkinParam.USE_STYLES()) {
+			margin1 = SkinParam.zeroMargin(10);
+			margin2 = SkinParam.zeroMargin(10);
+		} else {
+			margin1 = 10;
+			margin2 = 10;
+		}
+		final ImageBuilder imageBuilder = ImageBuilder.buildB(skinParam.getColorMapper(), skinParam.handwritten(), ClockwiseTopRightBottomLeft.margin1margin2((double) margin1, (double) margin2),
+		null, fileFormatOption.isWithMetadata() ? getMetadata() : null, "", dpiFactor, skinParam.getBackgroundColor(false));
 		TextBlock result = getTextBlock();
 
 		result = new AnnotatedWorker(this, skinParam, fileFormatOption.getDefaultStringBounder()).addAdd(result);
@@ -117,7 +127,7 @@ public class WBSDiagram extends UmlDiagram {
 				throw new UnsupportedOperationException();
 			}
 
-			public HtmlColor getBackcolor() {
+			public HColor getBackcolor() {
 				return null;
 			}
 		};
@@ -132,7 +142,8 @@ public class WBSDiagram extends UmlDiagram {
 		return new Fork(getSkinParam(), root);
 	}
 
-	public final static Pattern2 patternStereotype = MyPattern.cmpile("^\\s*(.*?)(?:\\s*\\<\\<\\s*(.*)\\s*\\>\\>)\\s*$");
+	public final static Pattern2 patternStereotype = MyPattern
+			.cmpile("^\\s*(.*?)(?:\\s*\\<\\<\\s*(.*)\\s*\\>\\>)\\s*$");
 
 	public CommandExecutionResult addIdea(int level, String label, Direction direction, IdeaShape shape) {
 		final Matcher2 m = patternStereotype.matcher(label);
@@ -167,7 +178,8 @@ public class WBSDiagram extends UmlDiagram {
 		return result;
 	}
 
-	private CommandExecutionResult add(int level, String label, String stereotype, Direction direction, IdeaShape shape) {
+	private CommandExecutionResult add(int level, String label, String stereotype, Direction direction,
+			IdeaShape shape) {
 		if (level == last.getLevel() + 1) {
 			final WElement newIdea = last.createElement(level, Display.getWithNewlines(label), stereotype, direction,
 					shape, getSkinParam().getCurrentStyleBuilder());

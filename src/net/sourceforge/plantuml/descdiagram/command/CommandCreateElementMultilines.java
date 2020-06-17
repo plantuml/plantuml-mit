@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -58,6 +58,7 @@ import net.sourceforge.plantuml.command.regex.RegexResult;
 import net.sourceforge.plantuml.cucadiagram.Code;
 import net.sourceforge.plantuml.cucadiagram.Display;
 import net.sourceforge.plantuml.cucadiagram.ILeaf;
+import net.sourceforge.plantuml.cucadiagram.Ident;
 import net.sourceforge.plantuml.cucadiagram.LeafType;
 import net.sourceforge.plantuml.cucadiagram.Stereotype;
 import net.sourceforge.plantuml.graphic.USymbol;
@@ -126,8 +127,8 @@ public class CommandCreateElementMultilines extends CommandMultilines2<AbstractE
 
 	@Override
 	protected CommandExecutionResult executeNow(AbstractEntityDiagram diagram, BlocLines lines) {
-		lines = lines.trim(false);
-		final RegexResult line0 = getStartingPattern().matcher(lines.getFirst499().getTrimmed().getString());
+		lines = lines.trimSmart(1);
+		final RegexResult line0 = getStartingPattern().matcher(lines.getFirst().getTrimmed().getString());
 		final String symbol = StringUtils.goUpperCase(line0.get("TYPE", 0));
 		final LeafType type;
 		USymbol usymbol;
@@ -136,16 +137,17 @@ public class CommandCreateElementMultilines extends CommandMultilines2<AbstractE
 			type = LeafType.USECASE;
 			usymbol = null;
 		} else {
-			usymbol = USymbol.getFromString(symbol);
+			usymbol = USymbol.fromString(symbol, diagram.getSkinParam().actorStyle(),
+					diagram.getSkinParam().componentStyle(), diagram.getSkinParam().packageStyle());
 			if (usymbol == null) {
 				throw new IllegalStateException();
 			}
 			type = LeafType.DESCRIPTION;
 		}
 
-		final Code code = Code.of(line0.get("CODE", 0));
-		final List<String> lineLast = StringUtils.getSplit(MyPattern.cmpile(getPatternEnd()), lines.getLast499()
-				.getString());
+		final String idShort = line0.get("CODE", 0);
+		final List<String> lineLast = StringUtils.getSplit(MyPattern.cmpile(getPatternEnd()),
+				lines.getLast().getTrimmed().getString());
 		lines = lines.subExtract(1, 1);
 		Display display = lines.toDisplay();
 		final String descStart = line0.get("DESC", 0);
@@ -159,18 +161,20 @@ public class CommandCreateElementMultilines extends CommandMultilines2<AbstractE
 
 		final String stereotype = line0.get("STEREO", 0);
 
-		if (CommandCreateElementFull.existsWithBadType(diagram, code, type, usymbol)) {
-			return CommandExecutionResult.error("This element (" + code.getFullName() + ") is already defined");
+		final Ident ident = diagram.buildLeafIdent(idShort);
+		final Code code = diagram.V1972() ? ident : diagram.buildCode(idShort);
+		if (CommandCreateElementFull.existsWithBadType3(diagram, code, ident, type, usymbol)) {
+			return CommandExecutionResult.error("This element (" + code.getName() + ") is already defined");
 		}
-		final ILeaf result = diagram.createLeaf(code, display, type, usymbol);
+		final ILeaf result = diagram.createLeaf(ident, code, display, type, usymbol);
 		if (result == null) {
-			return CommandExecutionResult.error("This element (" + code.getFullName() + ") is already defined");
+			return CommandExecutionResult.error("This element (" + code.getName() + ") is already defined");
 		}
 		result.setUSymbol(usymbol);
 		if (stereotype != null) {
-			result.setStereotype(new Stereotype(stereotype, diagram.getSkinParam().getCircledCharacterRadius(), diagram
-					.getSkinParam().getFont(null, false, FontParam.CIRCLED_CHARACTER), diagram.getSkinParam()
-					.getIHtmlColorSet()));
+			result.setStereotype(new Stereotype(stereotype, diagram.getSkinParam().getCircledCharacterRadius(),
+					diagram.getSkinParam().getFont(null, false, FontParam.CIRCLED_CHARACTER),
+					diagram.getSkinParam().getIHtmlColorSet()));
 		}
 
 		final String urlString = line0.get("URL", 0);

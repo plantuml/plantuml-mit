@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -55,7 +55,6 @@ import net.sourceforge.plantuml.creole.CreoleMode;
 import net.sourceforge.plantuml.cucadiagram.Display;
 import net.sourceforge.plantuml.graphic.FontConfiguration;
 import net.sourceforge.plantuml.graphic.HorizontalAlignment;
-import net.sourceforge.plantuml.graphic.HtmlColor;
 import net.sourceforge.plantuml.graphic.Rainbow;
 import net.sourceforge.plantuml.graphic.StringBounder;
 import net.sourceforge.plantuml.graphic.TextBlock;
@@ -65,6 +64,7 @@ import net.sourceforge.plantuml.skin.rose.Rose;
 import net.sourceforge.plantuml.style.SName;
 import net.sourceforge.plantuml.style.Style;
 import net.sourceforge.plantuml.style.StyleSignature;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
 
 public class FtileFactoryDelegator implements FtileFactory {
 
@@ -89,8 +89,8 @@ public class FtileFactoryDelegator implements FtileFactory {
 		final LinkRendering linkRendering = tile.getInLinkRendering();
 		if (linkRendering == null) {
 			if (SkinParam.USE_STYLES()) {
-				final Style style = getDefaultStyleDefinitionArrow().getMergedStyle(
-						skinParam().getCurrentStyleBuilder());
+				final Style style = getDefaultStyleDefinitionArrow()
+						.getMergedStyle(skinParam().getCurrentStyleBuilder());
 				return Rainbow.build(style, skinParam().getIHtmlColorSet());
 			} else {
 				color = Rainbow.build(skinParam());
@@ -100,8 +100,8 @@ public class FtileFactoryDelegator implements FtileFactory {
 		}
 		if (color.size() == 0) {
 			if (SkinParam.USE_STYLES()) {
-				final Style style = getDefaultStyleDefinitionArrow().getMergedStyle(
-						skinParam().getCurrentStyleBuilder());
+				final Style style = getDefaultStyleDefinitionArrow()
+						.getMergedStyle(skinParam().getCurrentStyleBuilder());
 				return Rainbow.build(style, skinParam().getIHtmlColorSet());
 			} else {
 				color = Rainbow.build(skinParam());
@@ -122,7 +122,7 @@ public class FtileFactoryDelegator implements FtileFactory {
 		} else {
 			fontConfiguration = new FontConfiguration(skinParam(), FontParam.ARROW, null);
 		}
-		return display.create(fontConfiguration, HorizontalAlignment.LEFT, skinParam(), CreoleMode.SIMPLE_LINE);
+		return display.create7(fontConfiguration, HorizontalAlignment.LEFT, skinParam(), CreoleMode.SIMPLE_LINE);
 	}
 
 	protected Display getInLinkRenderingDisplay(Ftile tile) {
@@ -149,7 +149,7 @@ public class FtileFactoryDelegator implements FtileFactory {
 		return factory.stop(swimlane);
 	}
 
-	public Ftile spot(Swimlane swimlane, String spot, HtmlColor color) {
+	public Ftile spot(Swimlane swimlane, String spot, HColor color) {
 		return factory.spot(swimlane, spot, color);
 	}
 
@@ -183,16 +183,16 @@ public class FtileFactoryDelegator implements FtileFactory {
 		return factory.assembly(tile1, tile2);
 	}
 
-	public Ftile repeat(Swimlane swimlane, Swimlane swimlaneOut, Display startLabel, Ftile repeat, Display test,
-			Display yes, Display out, HtmlColor color, LinkRendering backRepeatLinkRendering, Ftile backward,
-			boolean noOut) {
-		return factory.repeat(swimlane, swimlaneOut, startLabel, repeat, test, yes, out, color,
+	public Ftile repeat(BoxStyle boxStyleIn, Swimlane swimlane, Swimlane swimlaneOut, Display startLabel, Ftile repeat,
+			Display test, Display yes, Display out, Colors colors, LinkRendering backRepeatLinkRendering,
+			Ftile backward, boolean noOut) {
+		return factory.repeat(boxStyleIn, swimlane, swimlaneOut, startLabel, repeat, test, yes, out, colors,
 				backRepeatLinkRendering, backward, noOut);
 	}
 
 	public Ftile createWhile(Swimlane swimlane, Ftile whileBlock, Display test, Display yes, Display out,
-			LinkRendering afterEndwhile, HtmlColor color, Instruction specialOut) {
-		return factory.createWhile(swimlane, whileBlock, test, yes, out, afterEndwhile, color, specialOut);
+			LinkRendering afterEndwhile, HColor color, Instruction specialOut, Ftile back) {
+		return factory.createWhile(swimlane, whileBlock, test, yes, out, afterEndwhile, color, specialOut, back);
 	}
 
 	public Ftile createIf(Swimlane swimlane, List<Branch> thens, Branch elseBranch, LinkRendering afterEndwhile,
@@ -209,8 +209,8 @@ public class FtileFactoryDelegator implements FtileFactory {
 		return factory.createParallel(all, style, label, in, out);
 	}
 
-	public Ftile createGroup(Ftile list, Display name, HtmlColor backColor, HtmlColor titleColor, PositionedNote note,
-			HtmlColor borderColor, USymbol type, double roundCorner) {
+	public Ftile createGroup(Ftile list, Display name, HColor backColor, HColor titleColor, PositionedNote note,
+			HColor borderColor, USymbol type, double roundCorner) {
 		return factory.createGroup(list, name, backColor, titleColor, note, borderColor, type, roundCorner);
 	}
 

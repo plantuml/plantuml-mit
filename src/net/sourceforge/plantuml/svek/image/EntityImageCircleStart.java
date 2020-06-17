@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -47,7 +47,6 @@ import net.sourceforge.plantuml.ISkinParam;
 import net.sourceforge.plantuml.SkinParam;
 import net.sourceforge.plantuml.SkinParamUtils;
 import net.sourceforge.plantuml.cucadiagram.ILeaf;
-import net.sourceforge.plantuml.graphic.HtmlColor;
 import net.sourceforge.plantuml.graphic.StringBounder;
 import net.sourceforge.plantuml.style.PName;
 import net.sourceforge.plantuml.style.SName;
@@ -55,10 +54,10 @@ import net.sourceforge.plantuml.style.Style;
 import net.sourceforge.plantuml.style.StyleSignature;
 import net.sourceforge.plantuml.svek.AbstractEntityImage;
 import net.sourceforge.plantuml.svek.ShapeType;
-import net.sourceforge.plantuml.ugraphic.UChangeBackColor;
-import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UEllipse;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
+import net.sourceforge.plantuml.ugraphic.color.HColorNone;
 
 public class EntityImageCircleStart extends AbstractEntityImage {
 
@@ -84,7 +83,7 @@ public class EntityImageCircleStart extends AbstractEntityImage {
 		if (getSkinParam().shadowing(getEntity().getStereotype())) {
 			shadowing = 3;
 		}
-		HtmlColor color = SkinParamUtils.getColor(getSkinParam(), getStereo(), colorParam);
+		HColor color = SkinParamUtils.getColor(getSkinParam(), getStereo(), colorParam);
 		if (SkinParam.USE_STYLES()) {
 			final Style style = getDefaultStyleDefinitionCircle().getMergedStyle(
 					getSkinParam().getCurrentStyleBuilder());
@@ -92,7 +91,7 @@ public class EntityImageCircleStart extends AbstractEntityImage {
 			shadowing = style.value(PName.Shadowing).asDouble();
 		}
 		circle.setDeltaShadow(shadowing);
-		ug.apply(new UChangeBackColor(color)).apply(new UChangeColor(null)).draw(circle);
+		ug.apply(color.bg()).apply(new HColorNone()).draw(circle);
 	}
 
 	public ShapeType getShapeType() {

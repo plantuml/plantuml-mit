@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -40,19 +40,15 @@
 package net.sourceforge.plantuml.sprite;
 
 import java.awt.geom.Dimension2D;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 import net.sourceforge.plantuml.Dimension2DDouble;
-import net.sourceforge.plantuml.FileUtils;
 import net.sourceforge.plantuml.SvgString;
 import net.sourceforge.plantuml.graphic.AbstractTextBlock;
-import net.sourceforge.plantuml.graphic.HtmlColor;
 import net.sourceforge.plantuml.graphic.StringBounder;
 import net.sourceforge.plantuml.graphic.TextBlock;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UImageSvg;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
 
 public class SpriteSvg implements Sprite {
 
@@ -62,15 +58,7 @@ public class SpriteSvg implements Sprite {
 		this.img = new UImageSvg(new SvgString(svg, 1));
 	}
 
-	public SpriteSvg(File svgFile) throws IOException {
-		this(FileUtils.readSvg(svgFile));
-	}
-
-	public SpriteSvg(InputStream is) throws IOException {
-		this(FileUtils.readSvg(is));
-	}
-
-	public TextBlock asTextBlock(final HtmlColor color, final double scale) {
+	public TextBlock asTextBlock(final HColor color, final double scale) {
 		return new AbstractTextBlock() {
 
 			public void drawU(UGraphic ug) {

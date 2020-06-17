@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -157,6 +157,8 @@ public class Pipe {
 			final String s = readOneLine();
 			if (s == null) {
 				closed = true;
+			} else if (s.startsWith("@@@format ")) {
+				manageFormat(s);
 			} else {
 				sb.append(s);
 				sb.append(BackSlash.NEWLINE);
@@ -173,6 +175,14 @@ public class Pipe {
 			source = "@startuml\n" + source + "\n@enduml";
 		}
 		return source;
+	}
+
+	private void manageFormat(String s) {
+		if (s.contains("png")) {
+			option.setFileFormatOption(new FileFormatOption(FileFormat.PNG));
+		} else if (s.contains("svg")) {
+			option.setFileFormatOption(new FileFormatOption(FileFormat.SVG));
+		}
 	}
 
 	private String readOneLine() throws IOException {

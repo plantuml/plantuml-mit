@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -48,7 +48,6 @@ import net.sourceforge.plantuml.activitydiagram3.ftile.FtileFactory;
 import net.sourceforge.plantuml.activitydiagram3.ftile.Swimlane;
 import net.sourceforge.plantuml.activitydiagram3.ftile.WeldingPoint;
 import net.sourceforge.plantuml.cucadiagram.Display;
-import net.sourceforge.plantuml.graphic.HtmlColor;
 import net.sourceforge.plantuml.graphic.Rainbow;
 import net.sourceforge.plantuml.graphic.color.Colors;
 import net.sourceforge.plantuml.sequencediagram.NotePosition;
@@ -58,6 +57,7 @@ import net.sourceforge.plantuml.style.SName;
 import net.sourceforge.plantuml.style.Style;
 import net.sourceforge.plantuml.style.StyleBuilder;
 import net.sourceforge.plantuml.style.StyleSignature;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
 
 public class Branch {
 
@@ -65,7 +65,7 @@ public class Branch {
 	private final Display labelTest;
 	private final Display labelPositive;
 	private final Display inlabel;
-	private final HtmlColor color;
+	private final HColor color;
 	private LinkRendering inlinkRendering = LinkRendering.none();
 
 	private Ftile ftile;
@@ -83,7 +83,7 @@ public class Branch {
 	}
 
 	public Branch(StyleBuilder styleBuilder, Swimlane swimlane, Display labelPositive, Display labelTest,
-			HtmlColor color, Display inlabel) {
+			HColor color, Display inlabel) {
 		if (labelPositive == null) {
 			throw new IllegalArgumentException();
 		}
@@ -166,7 +166,7 @@ public class Branch {
 		return ftile.skinParam();
 	}
 
-	public final HtmlColor getColor() {
+	public final HColor getColor() {
 		return color;
 	}
 

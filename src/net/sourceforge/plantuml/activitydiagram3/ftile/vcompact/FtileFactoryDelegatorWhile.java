@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -60,13 +60,13 @@ import net.sourceforge.plantuml.activitydiagram3.ftile.Swimlane;
 import net.sourceforge.plantuml.activitydiagram3.ftile.WeldingPoint;
 import net.sourceforge.plantuml.cucadiagram.Display;
 import net.sourceforge.plantuml.graphic.FontConfiguration;
-import net.sourceforge.plantuml.graphic.HtmlColor;
 import net.sourceforge.plantuml.graphic.Rainbow;
 import net.sourceforge.plantuml.style.PName;
 import net.sourceforge.plantuml.style.Style;
 import net.sourceforge.plantuml.svek.ConditionStyle;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UTranslate;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
 
 public class FtileFactoryDelegatorWhile extends FtileFactoryDelegator {
 
@@ -76,10 +76,10 @@ public class FtileFactoryDelegatorWhile extends FtileFactoryDelegator {
 
 	@Override
 	public Ftile createWhile(Swimlane swimlane, Ftile whileBlock, Display test, Display yes, Display out,
-			LinkRendering afterEndwhile, HtmlColor color, Instruction specialOut) {
+			LinkRendering afterEndwhile, HColor color, Instruction specialOut, Ftile backward) {
 
-		final HtmlColor borderColor;
-		final HtmlColor backColor;
+		final HColor borderColor;
+		final HColor backColor;
 		final Rainbow arrowColor;
 		final FontConfiguration fontArrow;
 		final FontConfiguration fcTest;
@@ -87,10 +87,10 @@ public class FtileFactoryDelegatorWhile extends FtileFactoryDelegator {
 		final FontParam testParam = conditionStyle == ConditionStyle.INSIDE ? FontParam.ACTIVITY_DIAMOND
 				: FontParam.ARROW;
 		if (SkinParam.USE_STYLES()) {
-			final Style styleArrow = getDefaultStyleDefinitionArrow().getMergedStyle(
-					skinParam().getCurrentStyleBuilder());
-			final Style styleDiamond = getDefaultStyleDefinitionDiamond().getMergedStyle(
-					skinParam().getCurrentStyleBuilder());
+			final Style styleArrow = getDefaultStyleDefinitionArrow()
+					.getMergedStyle(skinParam().getCurrentStyleBuilder());
+			final Style styleDiamond = getDefaultStyleDefinitionDiamond()
+					.getMergedStyle(skinParam().getCurrentStyleBuilder());
 			borderColor = styleDiamond.value(PName.LineColor).asColor(skinParam().getIHtmlColorSet());
 			backColor = styleDiamond.value(PName.BackGroundColor).asColor(skinParam().getIHtmlColorSet());
 			arrowColor = Rainbow.build(styleArrow, skinParam().getIHtmlColorSet());
@@ -106,11 +106,12 @@ public class FtileFactoryDelegatorWhile extends FtileFactoryDelegator {
 		}
 
 		final LinkRendering endInlinkRendering = whileBlock.getOutLinkRendering();
-		final Rainbow endInlinkColor = endInlinkRendering == null || endInlinkRendering.getRainbow().size() == 0 ? arrowColor
+		final Rainbow endInlinkColor = endInlinkRendering == null || endInlinkRendering.getRainbow().size() == 0
+				? arrowColor
 				: endInlinkRendering.getRainbow();
 
 		Ftile result = FtileWhile.create(swimlane, whileBlock, test, borderColor, backColor, arrowColor, yes, out,
-				endInlinkColor, afterEndwhile, fontArrow, getFactory(), conditionStyle, fcTest, specialOut);
+				endInlinkColor, afterEndwhile, fontArrow, getFactory(), conditionStyle, fcTest, specialOut, backward);
 
 		final List<WeldingPoint> weldingPoints = whileBlock.getWeldingPoints();
 		if (weldingPoints.size() > 0) {
@@ -124,8 +125,8 @@ public class FtileFactoryDelegatorWhile extends FtileFactoryDelegator {
 					public void drawU(UGraphic ug) {
 						final UTranslate tr1 = genealogy.getTranslate(ftileBreak, ug.getStringBounder());
 
-						final Snake snake = new Snake(getFtile1().arrowHorizontalAlignment(), arrowColor, Arrows
-								.asToLeft());
+						final Snake snake = new Snake(getFtile1().arrowHorizontalAlignment(), arrowColor,
+								Arrows.asToLeft());
 						snake.addPoint(tr1.getDx(), tr1.getDy());
 						snake.addPoint(Diamond.diamondHalfSize, tr1.getDy());
 						ug.draw(snake);

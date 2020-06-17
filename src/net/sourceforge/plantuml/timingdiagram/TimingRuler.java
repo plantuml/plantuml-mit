@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -50,15 +50,15 @@ import net.sourceforge.plantuml.ISkinParam;
 import net.sourceforge.plantuml.cucadiagram.Display;
 import net.sourceforge.plantuml.graphic.FontConfiguration;
 import net.sourceforge.plantuml.graphic.HorizontalAlignment;
-import net.sourceforge.plantuml.graphic.HtmlColorSetSimple;
-import net.sourceforge.plantuml.graphic.HtmlColorUtils;
 import net.sourceforge.plantuml.graphic.StringBounder;
 import net.sourceforge.plantuml.graphic.TextBlock;
-import net.sourceforge.plantuml.ugraphic.UChangeColor;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.ULine;
 import net.sourceforge.plantuml.ugraphic.UStroke;
 import net.sourceforge.plantuml.ugraphic.UTranslate;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
+import net.sourceforge.plantuml.ugraphic.color.HColorSet;
+import net.sourceforge.plantuml.ugraphic.color.HColorUtils;
 
 public class TimingRuler {
 
@@ -71,11 +71,16 @@ public class TimingRuler {
 
 	private TimingFormat format = TimingFormat.DECIMAL;
 
+	static UGraphic applyForVLines(UGraphic ug) {
+		final UStroke stroke = new UStroke(3, 5, 0.5);
+		final HColor color = HColorSet.instance().getColorIfValid("#AAA");
+		return ug.apply(stroke).apply(color);
+	}
+
 	public void ensureNotEmpty() {
 		if (times.size() == 0) {
 			this.times.add(new TimeTick(BigDecimal.ZERO, TimingFormat.DECIMAL));
 		}
-
 	}
 
 	public TimingRuler(ISkinParam skinParam) {
@@ -135,6 +140,10 @@ public class TimingRuler {
 		return time / tickUnitary() * tickIntervalInPixels;
 	}
 
+	private long tickToTime(int i) {
+		return tickUnitary * i + getMin().getTime().longValue();
+	}
+
 	public void addTime(TimeTick time) {
 		this.highestCommonFactorInternal = -1;
 		times.add(time);
@@ -153,14 +162,14 @@ public class TimingRuler {
 	}
 
 	public void drawTimeAxis(UGraphic ug) {
-		ug = ug.apply(new UStroke(2.0)).apply(new UChangeColor(HtmlColorUtils.BLACK));
+		ug = ug.apply(new UStroke(2.0)).apply(HColorUtils.BLACK);
 		final double tickHeight = 5;
-		final ULine line = new ULine(0, tickHeight);
+		final ULine line = ULine.vline(tickHeight);
 		final int nb = getNbTick(true);
 		for (int i = 0; i <= nb; i++) {
-			ug.apply(new UTranslate(tickIntervalInPixels * i, 0)).draw(line);
+			ug.apply(UTranslate.dx(tickIntervalInPixels * i)).draw(line);
 		}
-		ug.draw(new ULine(nb * tickIntervalInPixels, 0));
+		ug.draw(ULine.hline(nb * tickIntervalInPixels));
 
 		for (long round : roundValues()) {
 			final TextBlock text = getTimeTextBlock(round);
@@ -179,7 +188,7 @@ public class TimingRuler {
 		} else {
 			final int nb = getNbTick(true);
 			for (int i = 0; i <= nb; i++) {
-				final long round = tickUnitary * i;
+				final long round = tickToTime(i);
 				result.add(round);
 			}
 		}
@@ -189,12 +198,12 @@ public class TimingRuler {
 		return result;
 	}
 
-	public void draw0(UGraphic ug, double height) {
-		ug = ug.apply(new UStroke(3, 5, 0.5)).apply(new UChangeColor(new HtmlColorSetSimple().getColorIfValid("#AAA")));
-		final ULine line = new ULine(0, height);
+	public void drawVlines(UGraphic ug, double height) {
+		ug = applyForVLines(ug);
+		final ULine line = ULine.vline(height);
 		final int nb = getNbTick(true);
 		for (int i = 0; i <= nb; i++) {
-			ug.apply(new UTranslate(tickIntervalInPixels * i, 0)).draw(line);
+			ug.apply(UTranslate.dx(tickIntervalInPixels * i)).draw(line);
 		}
 	}
 

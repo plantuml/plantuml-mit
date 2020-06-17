@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -52,7 +52,6 @@ import net.sourceforge.plantuml.command.regex.RegexOr;
 import net.sourceforge.plantuml.command.regex.RegexResult;
 import net.sourceforge.plantuml.cucadiagram.Display;
 import net.sourceforge.plantuml.graphic.HorizontalAlignment;
-import net.sourceforge.plantuml.style.PName;
 
 public class CommandHeader extends SingleLineCommand2<TitledDiagram> {
 
@@ -79,7 +78,7 @@ public class CommandHeader extends SingleLineCommand2<TitledDiagram> {
 		final String align = arg.get("POSITION", 0);
 		HorizontalAlignment ha = HorizontalAlignment.fromString(align, HorizontalAlignment.RIGHT);
 		if (SkinParam.USE_STYLES() && align == null) {
-			ha = FontParam.HEADER.getStyleDefinition()
+			ha = FontParam.HEADER.getStyleDefinition(null)
 					.getMergedStyle(((UmlDiagram) diagram).getSkinParam().getCurrentStyleBuilder())
 					.getHorizontalAlignment();
 		}

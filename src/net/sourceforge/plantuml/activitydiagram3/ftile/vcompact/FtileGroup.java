@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -57,8 +57,6 @@ import net.sourceforge.plantuml.activitydiagram3.ftile.Swimlane;
 import net.sourceforge.plantuml.cucadiagram.Display;
 import net.sourceforge.plantuml.graphic.FontConfiguration;
 import net.sourceforge.plantuml.graphic.HorizontalAlignment;
-import net.sourceforge.plantuml.graphic.HtmlColor;
-import net.sourceforge.plantuml.graphic.HtmlColorUtils;
 import net.sourceforge.plantuml.graphic.StringBounder;
 import net.sourceforge.plantuml.graphic.SymbolContext;
 import net.sourceforge.plantuml.graphic.TextBlock;
@@ -76,6 +74,8 @@ import net.sourceforge.plantuml.ugraphic.UFont;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UStroke;
 import net.sourceforge.plantuml.ugraphic.UTranslate;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
+import net.sourceforge.plantuml.ugraphic.color.HColorUtils;
 import net.sourceforge.plantuml.utils.MathUtils;
 
 public class FtileGroup extends AbstractFtile {
@@ -84,8 +84,8 @@ public class FtileGroup extends AbstractFtile {
 	private final Ftile inner;
 	private final TextBlock name;
 	private final TextBlock headerNote;
-	private final HtmlColor borderColor;
-	private final HtmlColor backColor;
+	private final HColor borderColor;
+	private final HColor backColor;
 	private final double shadowing;
 	private final UStroke stroke;
 	private final USymbol type;
@@ -95,14 +95,14 @@ public class FtileGroup extends AbstractFtile {
 		return StyleSignature.of(SName.root, SName.element, SName.activityDiagram, SName.partition);
 	}
 
-	public FtileGroup(Ftile inner, Display title, Display displayNote, HtmlColor arrowColor, HtmlColor backColor,
-			HtmlColor titleColor, ISkinParam skinParam, HtmlColor borderColor, USymbol type, double roundCorner) {
+	public FtileGroup(Ftile inner, Display title, Display displayNote, HColor arrowColor, HColor backColor,
+			HColor titleColor, ISkinParam skinParam, HColor borderColor, USymbol type, double roundCorner) {
 		super(inner.skinParam());
 		this.roundCorner = roundCorner;
 		this.type = type;
-		this.backColor = backColor == null ? HtmlColorUtils.WHITE : backColor;
+		this.backColor = backColor == null ? HColorUtils.WHITE : backColor;
 		this.inner = FtileUtils.addHorizontalMargin(inner, 10);
-		this.borderColor = borderColor == null ? HtmlColorUtils.BLACK : borderColor;
+		this.borderColor = borderColor == null ? HColorUtils.BLACK : borderColor;
 
 		final FontConfiguration fc;
 		if (SkinParam.USE_STYLES()) {
@@ -111,7 +111,7 @@ public class FtileGroup extends AbstractFtile {
 			this.shadowing = style.value(PName.Shadowing).asDouble();
 		} else {
 			final UFont font = skinParam.getFont(null, false, FontParam.PARTITION);
-			final HtmlColor fontColor = skinParam.getFontHtmlColor(null, FontParam.PARTITION);
+			final HColor fontColor = skinParam.getFontHtmlColor(null, FontParam.PARTITION);
 			fc = new FontConfiguration(font, fontColor, skinParam.getHyperlinkColor(),
 					skinParam.useUnderlineForHyperlink(), skinParam.getTabSize());
 			this.shadowing = skinParam().shadowing(null) ? 3 : 0;
@@ -177,8 +177,8 @@ public class FtileGroup extends AbstractFtile {
 		final FtileGeometry orig = getInnerDimension(stringBounder);
 		final Dimension2D dimTitle = name.calculateDimension(stringBounder);
 		final Dimension2D dimHeaderNote = headerNote.calculateDimension(stringBounder);
-		final double suppWidth = MathUtils
-				.max(orig.getWidth(), dimTitle.getWidth() + 20, dimHeaderNote.getWidth() + 20) - orig.getWidth();
+		final double suppWidth = MathUtils.max(orig.getWidth(), dimTitle.getWidth() + 20, dimHeaderNote.getWidth() + 20)
+				- orig.getWidth();
 		return suppWidth;
 	}
 
@@ -211,11 +211,11 @@ public class FtileGroup extends AbstractFtile {
 				+ headerNoteHeight(stringBounder);
 		final double titleAndHeaderNoteHeight = diffHeightTitle(stringBounder) + headerNoteHeight(stringBounder);
 		if (orig.hasPointOut()) {
-			return new FtileGeometry(width, height, orig.getLeft() + suppWidth / 2, orig.getInY()
-					+ titleAndHeaderNoteHeight, orig.getOutY() + titleAndHeaderNoteHeight);
+			return new FtileGeometry(width, height, orig.getLeft() + suppWidth / 2,
+					orig.getInY() + titleAndHeaderNoteHeight, orig.getOutY() + titleAndHeaderNoteHeight);
 		}
-		return new FtileGeometry(width, height, orig.getLeft() + suppWidth / 2, orig.getInY()
-				+ titleAndHeaderNoteHeight);
+		return new FtileGeometry(width, height, orig.getLeft() + suppWidth / 2,
+				orig.getInY() + titleAndHeaderNoteHeight);
 	}
 
 	private double headerNoteHeight(StringBounder stringBounder) {
@@ -226,12 +226,14 @@ public class FtileGroup extends AbstractFtile {
 		final StringBounder stringBounder = ug.getStringBounder();
 		final Dimension2D dimTotal = calculateDimension(stringBounder);
 
-		// final double roundCorner = type.getSkinParameter().getRoundCorner(skinParam(), null);
+		// final double roundCorner =
+		// type.getSkinParameter().getRoundCorner(skinParam(), null);
 		final SymbolContext symbolContext = new SymbolContext(backColor, borderColor).withShadow(shadowing)
 				.withStroke(stroke).withCorner(roundCorner, 0);
 
-		type.asBig(name, inner.skinParam().getHorizontalAlignment(AlignmentParam.packageTitleAlignment, null, false),
-				TextBlockUtils.empty(0, 0), dimTotal.getWidth(), dimTotal.getHeight(), symbolContext,
+		final HorizontalAlignment align = inner.skinParam().getHorizontalAlignment(AlignmentParam.packageTitleAlignment,
+				null, false);
+		type.asBig(name, align, TextBlockUtils.empty(0, 0), dimTotal.getWidth(), dimTotal.getHeight(), symbolContext,
 				skinParam().getStereotypeAlignment()).drawU(ug);
 
 		final Dimension2D dimHeaderNote = headerNote.calculateDimension(stringBounder);

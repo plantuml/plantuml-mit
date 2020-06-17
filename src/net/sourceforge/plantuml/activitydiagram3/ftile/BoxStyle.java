@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -54,7 +54,7 @@ public enum BoxStyle {
 	PLAIN {
 		@Override
 		protected Shadowable getShape(double width, double height, double roundCorner) {
-			return new URectangle(width, height, roundCorner, roundCorner);
+			return new URectangle(width, height).rounded(roundCorner);
 		}
 	},
 	SDL_INPUT('<') {
@@ -87,9 +87,9 @@ public enum BoxStyle {
 			final URectangle rect = new URectangle(width, height);
 			rect.setDeltaShadow(shadowing);
 			ug.draw(rect);
-			final ULine vline = new ULine(0, height);
-			ug.apply(new UTranslate(PADDING, 0)).draw(vline);
-			ug.apply(new UTranslate(width - PADDING, 0)).draw(vline);
+			final ULine vline = ULine.vline(height);
+			ug.apply(UTranslate.dx(PADDING)).draw(vline);
+			ug.apply(UTranslate.dx(width - PADDING)).draw(vline);
 		}
 	},
 	SDL_SAVE('\\') {

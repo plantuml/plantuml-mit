@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -41,7 +41,7 @@ package net.sourceforge.plantuml.graphic.color;
 
 import net.sourceforge.plantuml.command.regex.RegexLeaf;
 import net.sourceforge.plantuml.command.regex.RegexResult;
-import net.sourceforge.plantuml.graphic.IHtmlColorSet;
+import net.sourceforge.plantuml.ugraphic.color.HColorSet;
 
 public class ColorParser {
 
@@ -60,7 +60,7 @@ public class ColorParser {
 		this.mainType = mainType;
 	}
 
-	public Colors getColor(RegexResult arg, IHtmlColorSet set) {
+	public Colors getColor(RegexResult arg, HColorSet set) {
 		if (mainType == null) {
 			throw new IllegalStateException();
 		}

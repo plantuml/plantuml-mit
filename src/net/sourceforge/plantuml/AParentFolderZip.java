@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -39,12 +39,13 @@
  */
 package net.sourceforge.plantuml;
 
-import java.io.File;
 import java.io.IOException;
+
+import net.sourceforge.plantuml.security.SFile;
 
 public class AParentFolderZip implements AParentFolder {
 
-	private final File zipFile;
+	private final SFile zipFile;
 	private final String parent;
 
 	@Override
@@ -52,7 +53,7 @@ public class AParentFolderZip implements AParentFolder {
 		return "AParentFolderZip::" + zipFile + " " + parent;
 	}
 
-	public AParentFolderZip(File zipFile, String entry) {
+	public AParentFolderZip(SFile zipFile, String entry) {
 		this.zipFile = zipFile;
 		final int idx = entry.lastIndexOf('/');
 		if (idx == -1) {

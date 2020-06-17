@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -39,6 +39,8 @@
  */
 package net.sourceforge.plantuml.activitydiagram3.command;
 
+import java.util.regex.Matcher;
+
 import net.sourceforge.plantuml.ColorParam;
 import net.sourceforge.plantuml.LineLocation;
 import net.sourceforge.plantuml.Url;
@@ -60,7 +62,26 @@ import net.sourceforge.plantuml.graphic.color.Colors;
 
 public class CommandActivity3 extends SingleLineCommand2<ActivityDiagram3> {
 
-	public static final String ENDING_GROUP = "(;|\\\\\\\\|(?<![/|<>}\\]])(?:[/<}\\]])|(?<!\\</?\\w{1,5})(?<!\\<img[^>]{1,999})(?<!\\<[&$]\\w{1,999})(?<!\\>)(?:\\>)|(?<!\\|.{1,999})(?:\\|))";
+	public static final String endingGroup() {
+		return "(" //
+				+ ";" //
+				+ "|" //
+				+ Matcher.quoteReplacement("\\\\") // that is simply \ character
+				+ "|" //
+				+ "(?<![/|<>}\\]])[/<}]" // About /<}
+				+ "|" //
+				+ "(?<![/|}\\]])\\]" // About ]
+				+ "|" //
+				+ "(?<!\\</?\\w{1,5})(?<!\\<img[^>]{1,999})(?<!\\<[&$]\\w{1,999})(?<!\\>)\\>"  // About >
+				+ "|" //
+				+ "(?<!\\|.{1,999})\\|" // About |
+				+ ")";
+	}
+
+	public static void main(String[] args) {
+		System.err.println(Matcher.quoteReplacement("\\\\"));
+		System.err.println(Matcher.quoteReplacement("\\\\").equals("\\\\\\\\"));
+	}
 
 	public CommandActivity3() {
 		super(getRegexConcat());
@@ -75,7 +96,7 @@ public class CommandActivity3 extends SingleLineCommand2<ActivityDiagram3> {
 				RegexLeaf.spaceZeroOrMore(), //
 				new RegexLeaf(":"), //
 				new RegexLeaf("LABEL", "(.*)"), //
-				new RegexLeaf("STYLE", ENDING_GROUP), //
+				new RegexLeaf("STYLE", endingGroup()), //
 				RegexLeaf.end());
 	}
 

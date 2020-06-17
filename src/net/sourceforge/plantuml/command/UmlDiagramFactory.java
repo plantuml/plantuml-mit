@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -57,7 +57,6 @@ import net.sourceforge.plantuml.core.UmlSource;
 import net.sourceforge.plantuml.error.PSystemError;
 import net.sourceforge.plantuml.error.PSystemErrorUtils;
 import net.sourceforge.plantuml.sequencediagram.command.CommandSkin;
-import net.sourceforge.plantuml.sprite.CommandListSprite;
 import net.sourceforge.plantuml.statediagram.command.CommandHideEmptyDescription;
 import net.sourceforge.plantuml.style.CommandStyleImport;
 import net.sourceforge.plantuml.style.CommandStyleMultilinesCSS;
@@ -133,7 +132,7 @@ public abstract class UmlDiagramFactory extends PSystemAbstractFactory {
 		final CommandExecutionResult result = sys.executeCommand(step.command, step.blocLines);
 		if (result.isOk() == false) {
 			final ErrorUml err = new ErrorUml(ErrorUmlType.EXECUTION_ERROR, result.getError(),
-					((StringLocated) step.blocLines.getFirst499()).getLocation());
+					((StringLocated) step.blocLines.getFirst()).getLocation());
 			sys = PSystemErrorUtils.buildV2(source, err, result.getDebugLines(), it.getTrace());
 		}
 		if (result.getNewDiagram() != null) {
@@ -155,7 +154,7 @@ public abstract class UmlDiagramFactory extends PSystemAbstractFactory {
 	}
 
 	private Step getCandidate(final IteratorCounter2 it) {
-		final BlocLines single = BlocLines.single2(it.peek());
+		final BlocLines single = BlocLines.single(it.peek());
 		if (cmds == null) {
 			cmds = createCommands();
 		}
@@ -201,11 +200,11 @@ public abstract class UmlDiagramFactory extends PSystemAbstractFactory {
 
 	private BlocLines addOneSingleLineManageEmbedded2(IteratorCounter2 it, BlocLines lines) {
 		final StringLocated linetoBeAdded = it.next();
-		lines = lines.add2(linetoBeAdded);
+		lines = lines.add(linetoBeAdded);
 		if (linetoBeAdded.getTrimmed().getString().equals("{{")) {
 			while (it.hasNext()) {
 				final StringLocated s = it.next();
-				lines = lines.add2(s);
+				lines = lines.add(s);
 				if (s.getTrimmed().getString().equals("}}")) {
 					return lines;
 				}
@@ -224,12 +223,9 @@ public abstract class UmlDiagramFactory extends PSystemAbstractFactory {
 		addTitleCommands(cmds);
 		addCommonCommands2(cmds);
 		addCommonHides(cmds);
-		cmds.add(new CommandStyleMultilinesCSS());
-		cmds.add(new CommandStyleImport());
 	}
 
 	final protected void addCommonCommands2(List<Command> cmds) {
-		// cmds.add(new CommandListSprite());
 		cmds.add(new CommandNope());
 		cmds.add(new CommandPragma());
 
@@ -246,10 +242,14 @@ public abstract class UmlDiagramFactory extends PSystemAbstractFactory {
 		cmds.add(new CommandScaleMaxWidthAndHeight());
 		cmds.add(new CommandAffineTransform());
 		cmds.add(new CommandAffineTransformMultiline());
-		final FactorySpriteCommand factorySpriteCommand = new FactorySpriteCommand();
+		final CommandFactorySprite factorySpriteCommand = new CommandFactorySprite();
 		cmds.add(factorySpriteCommand.createMultiLine(false));
 		cmds.add(factorySpriteCommand.createSingleLine());
 		cmds.add(new CommandSpriteFile());
+
+		cmds.add(new CommandStyleMultilinesCSS());
+		cmds.add(new CommandStyleImport());
+
 	}
 
 	final protected void addCommonHides(List<Command> cmds) {
@@ -263,6 +263,7 @@ public abstract class UmlDiagramFactory extends PSystemAbstractFactory {
 		cmds.add(new CommandTitle());
 		cmds.add(new CommandMainframe());
 		cmds.add(new CommandCaption());
+		cmds.add(new CommandMultilinesCaption());
 		cmds.add(new CommandMultilinesTitle());
 		cmds.add(new CommandMultilinesLegend());
 

@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -56,10 +56,8 @@ import net.sourceforge.plantuml.activitydiagram3.ftile.FtileGeometry;
 import net.sourceforge.plantuml.activitydiagram3.ftile.FtileKilled;
 import net.sourceforge.plantuml.activitydiagram3.ftile.FtileUtils;
 import net.sourceforge.plantuml.activitydiagram3.ftile.Snake;
-import net.sourceforge.plantuml.activitydiagram3.ftile.Swimlane;
 import net.sourceforge.plantuml.activitydiagram3.ftile.vertical.FtileThinSplit;
 import net.sourceforge.plantuml.cucadiagram.Display;
-import net.sourceforge.plantuml.graphic.HtmlColor;
 import net.sourceforge.plantuml.graphic.Rainbow;
 import net.sourceforge.plantuml.graphic.StringBounder;
 import net.sourceforge.plantuml.style.SName;
@@ -67,11 +65,12 @@ import net.sourceforge.plantuml.style.Style;
 import net.sourceforge.plantuml.style.StyleSignature;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
 import net.sourceforge.plantuml.ugraphic.UTranslate;
+import net.sourceforge.plantuml.ugraphic.color.HColor;
 
 public class ParallelBuilderSplit extends AbstractParallelFtilesBuilder {
 
-	public ParallelBuilderSplit(ISkinParam skinParam, StringBounder stringBounder, final List<Ftile> list, Ftile inner) {
-		super(skinParam, stringBounder, list, inner);
+	public ParallelBuilderSplit(ISkinParam skinParam, StringBounder stringBounder, List<Ftile> all) {
+		super(skinParam, stringBounder, all);
 	}
 
 	@Override
@@ -80,8 +79,8 @@ public class ParallelBuilderSplit extends AbstractParallelFtilesBuilder {
 	}
 
 	@Override
-	protected Ftile doStep1() {
-		Ftile result = getMiddle();
+	protected Ftile doStep1(Ftile inner) {
+		Ftile result = inner;
 		final List<Connection> conns = new ArrayList<Connection>();
 		final Rainbow thinColor;
 		if (SkinParam.USE_STYLES()) {
@@ -90,11 +89,11 @@ public class ParallelBuilderSplit extends AbstractParallelFtilesBuilder {
 		} else {
 			thinColor = result.getInLinkRendering().getRainbow(Rainbow.build(skinParam()));
 		}
-		final Ftile thin = new FtileThinSplit(skinParam(), getThin1Color(thinColor), getList().get(0).getSwimlaneIn());
+		final Ftile thin = new FtileThinSplit(skinParam(), getThin1Color(thinColor), list99.get(0).getSwimlaneIn());
 		double x = 0;
 		double first = 0;
 		double last = 0;
-		for (Ftile tmp : getList()) {
+		for (Ftile tmp : list99) {
 			final FtileGeometry dim = tmp.calculateDimension(getStringBounder());
 			if (first == 0) {
 				first = x + dim.getLeft();
@@ -127,8 +126,8 @@ public class ParallelBuilderSplit extends AbstractParallelFtilesBuilder {
 		return new FtileAssemblySimple(thin, result);
 	}
 
-	private HtmlColor getThin1Color(final Rainbow thinColor) {
-		for (Ftile tmp : getList()) {
+	private HColor getThin1Color(final Rainbow thinColor) {
+		for (Ftile tmp : list99) {
 			final Rainbow rainbow;
 			final LinkRendering inLinkRendering = tmp.getInLinkRendering();
 			if (SkinParam.USE_STYLES()) {
@@ -145,7 +144,7 @@ public class ParallelBuilderSplit extends AbstractParallelFtilesBuilder {
 	}
 
 	private boolean hasOut() {
-		for (Ftile tmp : getList()) {
+		for (Ftile tmp : list99) {
 			final boolean hasOutTmp = tmp.calculateDimension(getStringBounder()).hasPointOut();
 			if (hasOutTmp) {
 				return true;
@@ -155,7 +154,7 @@ public class ParallelBuilderSplit extends AbstractParallelFtilesBuilder {
 	}
 
 	@Override
-	protected Ftile doStep2(Ftile result) {
+	protected Ftile doStep2(Ftile inner, Ftile result) {
 
 		final FtileGeometry geom = result.calculateDimension(getStringBounder());
 		if (hasOut() == false) {
@@ -177,8 +176,8 @@ public class ParallelBuilderSplit extends AbstractParallelFtilesBuilder {
 		double x = 0;
 		double first = 0;
 		double last = 0;
-		for (Ftile tmp : getList()) {
-			final UTranslate translate0 = new UTranslate(0, 1.5);
+		for (Ftile tmp : list99) {
+			final UTranslate translate0 = UTranslate.dy(1.5);
 			final FtileGeometry dim = tmp.calculateDimension(getStringBounder());
 			if (dim.hasPointOut()) {
 				if (first == 0) {
@@ -196,7 +195,7 @@ public class ParallelBuilderSplit extends AbstractParallelFtilesBuilder {
 				rainbow = outLinkRendering.getRainbow(Rainbow.build(skinParam()));
 			}
 
-			conns.add(new ConnectionOut(translate0, tmp, out, x, rainbow, getHeightOfMiddle()));
+			conns.add(new ConnectionOut(translate0, tmp, out, x, rainbow, getHeightOfMiddle(inner)));
 			x += dim.getWidth();
 		}
 		if (last < geom.getLeft()) {
@@ -224,7 +223,7 @@ public class ParallelBuilderSplit extends AbstractParallelFtilesBuilder {
 		}
 
 		public void drawU(UGraphic ug) {
-			ug = ug.apply(new UTranslate(x, 0));
+			ug = ug.apply(UTranslate.dx(x));
 			final FtileGeometry geo = getFtile2().calculateDimension(getStringBounder());
 			final Snake snake = new Snake(arrowHorizontalAlignment(), arrowColor, Arrows.asToDown());
 			if (Display.isNull(label) == false) {
@@ -236,7 +235,7 @@ public class ParallelBuilderSplit extends AbstractParallelFtilesBuilder {
 		}
 
 		public void drawTranslate(UGraphic ug, UTranslate translate1, UTranslate translate2) {
-			ug = ug.apply(new UTranslate(x, 0));
+			ug = ug.apply(UTranslate.dx(x));
 			final FtileGeometry geo = getFtile2().calculateDimension(getStringBounder());
 			final Point2D p1 = new Point2D.Double(geo.getLeft(), 0);
 			final Point2D p2 = new Point2D.Double(geo.getLeft(), geo.getInY());
@@ -275,7 +274,7 @@ public class ParallelBuilderSplit extends AbstractParallelFtilesBuilder {
 		}
 
 		public void drawU(UGraphic ug) {
-			ug = ug.apply(new UTranslate(x, 0));
+			ug = ug.apply(UTranslate.dx(x));
 			final FtileGeometry geo = getFtile1().calculateDimension(getStringBounder());
 			if (geo.hasPointOut() == false) {
 				return;
@@ -292,7 +291,7 @@ public class ParallelBuilderSplit extends AbstractParallelFtilesBuilder {
 		}
 
 		public void drawTranslate(UGraphic ug, UTranslate translate1, UTranslate translate2) {
-			ug = ug.apply(new UTranslate(x, 0));
+			ug = ug.apply(UTranslate.dx(x));
 			final FtileGeometry geo = getFtile1().calculateDimension(getStringBounder());
 			if (geo.hasPointOut() == false) {
 				return;

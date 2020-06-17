@@ -4,12 +4,12 @@
  *
  * (C) Copyright 2009-2020, Arnaud Roques
  *
- * Project Info:  http://plantuml.com
+ * Project Info:  https://plantuml.com
  * 
  * If you like this project or if you find it useful, you can support us at:
  * 
- * http://plantuml.com/patreon (only 1$ per month!)
- * http://plantuml.com/paypal
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
  * 
  * This file is part of PlantUML.
  *
@@ -41,7 +41,6 @@ package net.sourceforge.plantuml.sprite;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,11 +48,13 @@ import java.util.List;
 import net.sourceforge.plantuml.StringUtils;
 import net.sourceforge.plantuml.code.AsciiEncoder;
 import net.sourceforge.plantuml.code.AsciiEncoderFinalZeros;
+import net.sourceforge.plantuml.code.ByteArray;
 import net.sourceforge.plantuml.code.CompressionZlib;
 import net.sourceforge.plantuml.code.CompressionZopfliZlib;
+import net.sourceforge.plantuml.code.NoPlantumlCompressionException;
 import net.sourceforge.plantuml.code.PairInt;
 import net.sourceforge.plantuml.code.SpiralOnRectangle;
-import net.sourceforge.plantuml.ugraphic.ColorChangerMonochrome;
+import net.sourceforge.plantuml.ugraphic.color.ColorChangerMonochrome;
 
 public enum SpriteGrayLevel {
 
@@ -285,18 +286,23 @@ public enum SpriteGrayLevel {
 		return Collections.unmodifiableList(result);
 	}
 
-	public Sprite buildSpriteZ(int width, int height, String compressed) throws IOException {
+	public Sprite buildSpriteZ(int width, int height, String compressed) {
 		final byte comp[] = new AsciiEncoder().decode(compressed);
-		final byte img[] = new CompressionZlib().decompress(comp);
-		final SpriteMonochrome result = new SpriteMonochrome(width, height, nbColor);
-		int cpt = 0;
-		for (int line = 0; line < result.getHeight(); line++) {
-			for (int col = 0; col < result.getWidth(); col++) {
-				result.setGrey(col, line, img[cpt++]);
+		try {
+			final ByteArray img = new CompressionZlib().decompress(comp);
+			final SpriteMonochrome result = new SpriteMonochrome(width, height, nbColor);
+			int cpt = 0;
+			for (int line = 0; line < result.getHeight(); line++) {
+				for (int col = 0; col < result.getWidth(); col++) {
+					result.setGrey(col, line, img.getByteAt(cpt++));
 
+				}
 			}
+			return result;
+		} catch (NoPlantumlCompressionException e) {
+			e.printStackTrace();
+			return null;
 		}
-		return result;
 	}
 
 }
