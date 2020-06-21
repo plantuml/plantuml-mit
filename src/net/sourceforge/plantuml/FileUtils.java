@@ -42,6 +42,8 @@ package net.sourceforge.plantuml;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,6 +60,25 @@ public class FileUtils {
 
 	public static void resetCounter() {
 		counter = new AtomicInteger(0);
+	}
+
+	static public File createTempFileLegacy(String prefix, String suffix) throws IOException {
+		if (suffix.startsWith(".") == false) {
+			throw new IllegalArgumentException();
+		}
+		if (prefix == null) {
+			throw new IllegalArgumentException();
+		}
+		final File f;
+		if (counter == null) {
+			f = File.createTempFile(prefix, suffix);
+		} else {
+			final String name = prefix + counter.addAndGet(1) + suffix;
+			f = new File(name);
+		}
+		Log.info("Creating temporary file: " + f);
+		f.deleteOnExit();
+		return f;
 	}
 
 	static public SFile createTempFile(String prefix, String suffix) throws IOException {
@@ -106,6 +127,12 @@ public class FileUtils {
 		if (fis == null) {
 			throw new FileNotFoundException();
 		}
+		final OutputStream fos = new BufferedOutputStream(os);
+		copyInternal(fis, fos);
+	}
+
+	static public void copyToStream(File src, OutputStream os) throws IOException {
+		final InputStream fis = new BufferedInputStream(new FileInputStream(src));
 		final OutputStream fos = new BufferedOutputStream(os);
 		copyInternal(fis, fos);
 	}

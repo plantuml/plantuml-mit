@@ -191,6 +191,9 @@ public abstract class USymbol {
 		if (s == null) {
 			return null;
 		}
+		if (s.equalsIgnoreCase("package")) {
+			return packageStyle.toUSymbol();
+		}
 		if (s.equalsIgnoreCase("actor")) {
 			return actorStyle.toUSymbol();
 		}
